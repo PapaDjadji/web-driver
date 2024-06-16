@@ -1,0 +1,69 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-3">
+      <form (ngSubmit)="trackDelivery()" class="card p-3">
+        <div class="form-row">
+          <div class="col">
+            <label for="deliveryId">Delivery ID</label>
+            <input type="text" class="form-control" id="deliveryId" name="deliveryId" [(ngModel)]="deliveryId" required>
+          </div>
+          <div class="col-auto align-self-end">
+            <button type="submit" class="btn btn-primary mb-2">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="col-lg-6">
+      <div *ngIf="packageDetails" class="card mb-3">
+        <div class="card-body">
+          <h2 class="card-title">Package Details</h2>
+          <p class="card-text"><strong>ID:</strong> {{ packageDetails.package_id }}</p>
+          <p class="card-text"><strong>Description:</strong> {{ packageDetails.description }}</p>
+          <p class="card-text"><strong>Weight:</strong> {{ packageDetails.weight }} grams</p>
+          <p class="card-text"><strong>Dimensions:</strong> {{ packageDetails.width }} x {{ packageDetails.height }} x
+            {{ packageDetails.depth }} cm</p>
+          <p class="card-text"><strong>From:</strong> {{ packageDetails.from_name }}, {{ packageDetails.from_address }}
+          </p>
+          <p class="card-text"><strong>To:</strong> {{ packageDetails.to_name }}, {{ packageDetails.to_address }}</p>
+        </div>
+
+        <div class="card-body">
+          <h2 class="card-title">Delivery Details</h2>
+          <p class="card-text"><strong>ID:</strong> {{ deliveryDetails.delivery_id }}</p>
+          <p class="card-text"><strong>Status:</strong> {{ deliveryDetails.status }}</p>
+          <p *ngIf="deliveryDetails.pickup_time" class="card-text"><strong>Pickup Time:</strong> {{
+            deliveryDetails.pickup_time }}</p>
+          <p *ngIf="deliveryDetails.start_time" class="card-text"><strong>Start Time:</strong> {{
+            deliveryDetails.start_time }}</p>
+          <p *ngIf="deliveryDetails.end_time" class="card-text"><strong>End Time:</strong> {{ deliveryDetails.end_time
+            }}
+          </p>
+          <div class="btn-group" role="group" aria-label="Status Buttons">
+            <button type="button" class="btn btn-secondary"
+                    [disabled]="!canChangeStatus('picked-up')"
+                    (click)="changeStatus('picked-up')">Picked Up</button>
+            <button type="button" class="btn btn-secondary"
+                    [disabled]="!canChangeStatus('in-transit')"
+                    (click)="changeStatus('in-transit')">In Transit</button>
+            <button type="button" class="btn btn-secondary"
+                    [disabled]="!canChangeStatus('delivered')"
+                    (click)="changeStatus('delivered')">Delivered</button>
+            <button type="button" class="btn btn-secondary"
+                    [disabled]="!canChangeStatus('failed')"
+                    (click)="changeStatus('failed')">Failed</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Colonne pour la Carte Google Maps -->
+    <div class="col-lg-6">
+      <google-map *ngIf="currentLocation" height="500px" width="100%" [center]="currentLocation" [zoom]="15">
+        <map-marker [position]="currentLocation"></map-marker>
+        <map-marker [position]="sourceLocation" label="S"></map-marker>
+        <map-marker [position]="destinationLocation" label="D"></map-marker>
+      </google-map>
+    </div>
+  </div>
+</div>
